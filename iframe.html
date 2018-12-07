@@ -550,14 +550,7 @@
 		}
 		
 	}		
-		
-		
-				//var iceBlock = new Image();
-		//iceBlock.onload = loadElement();
-		//iceBlock.src = "pics/ice_block.png";
-		
-		//var goneIce = new Image();
-		
+				
 		//will be called after calculation has been done to see the grid state
 		function paintGrid(newGrid)
 		{
@@ -590,10 +583,12 @@
 					
 						if (isBear)
 						{
+							console.log("SSSXXX222");
 							ctx.drawImage(bearImage, j * 40, i * 40, 40, 40);
 						}
 						else
 						{
+							console.log("SSSXXX333");
 							ctx.drawImage(iceBlock, j * 40, i * 40, 40, 40);
 						}					
 					}
