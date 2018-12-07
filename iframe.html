@@ -448,11 +448,22 @@
 			return (indices);
 		}
 
+
+		function flipAxes(currClicked){
+			var hits = new Array(currClicked.length);
+			for (var i = 0; i < currClicked.length; i++){
+				hits[i] = new Array(2);
+				hits[i][0] = currClicked[i][1];
+				hits[i][1] = currClicked[i][0];
+			}
+			return (hits);
+		}
+
 		//Update board
-		function updateMask(board, hits){
+		function updateMask(board, currClicked){
 			//Temp board
 			var new_mask = copy(board.mask);
-		   
+			var hits = flipAxes(currClicked);
 		   //Update board for hits
 		   for (var i = 0; i < hits.length; i++){
 			   new_mask[hits[i][0]][hits[i][1]] = 0;
@@ -507,7 +518,7 @@
 	function bearStatus(mask, bear_rows, bear_cols){
 		var rowSums = Array.apply(null, Array(bear_rows.length)).map(Number.prototype.valueOf,0);
 		var colSums = Array.apply(null, Array(bear_cols.length)).map(Number.prototype.valueOf,0);
-		
+
 		//Iter through Bear rows
 		for (var i = 0; i < bear_rows.length; i++){
 			for (var j = 0; j < mask.length; j++){
@@ -525,17 +536,17 @@
 		//Concat
 		var sums = rowSums.concat(colSums);
 		//Count how many are broken
-		var counts = sums.length;
-		for (var i = 0; i <= sums.length; i++){
+		var counts = 0;
+		for (var i = 0; i < sums.length; i++){
 			if (sums[i] != mask.length){
-				counts--;
+				counts++;
 			}
 		}
 		
 		if (counts == 0){
-			return (1);
-		} else {
 			return (0);
+		} else {
+			return (1);
 		}
 		
 	}		
