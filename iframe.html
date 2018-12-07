@@ -175,78 +175,19 @@
 
         }
 
-		/*
-        function handleLeftClickHelper(mouseX, mouseY) {
-            for (var c = 0; c < roverCount; c++) {
-                if (roverDead[c] == 1) {
-                    continue;
-                }
-                if (mouseX > roverX[c] && mouseX < roverX[c] + 40
-                        && mouseY > roverY[c] && mouseY < roverY[c] + 40) {
-                    selected = c;
-                    draw(roverX[selected], roverY[selected], selected);
-                    return;
-                }
-            }
-
-            if (roverDead[selected] == 1) {
-                return;
-            }
-
-            if (isAdjacent(mouseX, mouseY, roverX[selected], roverY[selected]) == true) {
-                var xLoc = mouseX - (mouseX % 40);
-                var yLoc = mouseY - (mouseY % 40);
-
-                for (var c = 0; c < mineCount; c++) {
-                    if (xLoc == mineX[c] && yLoc == mineY[c]) {
-                        roverDead[selected] = 1;
-                        expX.push(mineX[c]);
-                        expY.push(mineY[c]);
-                        expCount++;
-                        mineX.splice(c, 1);
-                        mineY.splice(c, 1);
-                        mineCount--;
-                        if (selected == 0) {
-                            var finishResults = document.createElement("h4");
-                            finishResults.id = "finishResults";
-                            finishResults.class = "text-primary";
-                            $(finishResults).html("You lost! Total moves = " + (moveCount + 1));
-                            $.get("../../dbman/saveScore.php", {gamename:"Safe Roving", playername:"Miner", score:moveCount})
-                            var div = document.getElementById("RightPane");
-                            div.appendChild(finishResults);
-                        }
-                        break;
-                    }
-                }
-                draw(xLoc, yLoc, selected);
-                roverX[selected] = xLoc;
-                roverY[selected] = yLoc;
-                moveCount++;
-                $(moveCountDisplay).html("Moves so far : " + moveCount);
-
-            }
-            if (mouseX > gridSize - 40 && mouseY > gridSize - 40 && (mouseX > roverX[0] && mouseX < roverX[0] + 40
-                    && mouseY > roverY[0] && mouseY < roverY[0] + 40)) {
-
-                xLoc = mouseX - (mouseX % 40);
-                yLoc = mouseY - (mouseY % 40);
-                draw(xLoc, yLoc, 1000000);
-                //alert("you win")
-                return;
-            }
-
-        }
-*/
         function handleClickPhase1(e) {		
 			console.log("LLL", currClicked);
 			console.log(currClicked);
 		
 		//vincent xxx >= 4 check should be after
+		/*
 			if (currClicked === null || currClicked === undefined || currClicked.length >= 4)
 			{
 				//some message?
 				return;
 			}
+			*/
+			
 			
 			console.log("YOYO");
             mouseX = parseInt(e.pageX - offsetX);
@@ -255,6 +196,36 @@
 			x = getCoordinatesValue(parseInt(e.pageX - offsetX));
 			y = getCoordinatesValue(parseInt(e.pageY - offsetY));
 			
+			
+			var removeIndex = -1;
+			var currClickedLength = currClicked.length;
+			
+			for (var i = 0; i < currClickedLength; ++i)
+			{
+				var currClickedLoc = currClicked[i];
+				console.log(currClickedLoc);
+				
+				if (currClickedLoc[0] === x && currClickedLoc[1] === y)
+				{
+					console.log("found at location", x, y);
+					ctx.drawImage(iceBlock, x * 40, y * 40, 40, 40);
+					removeIndex = i;
+					break;
+				}
+			}			
+						
+			if (removeIndex >= 0)
+			{
+				currClicked.splice(removeIndex, 1);
+				return;
+			}						
+			
+			if (currClicked.length >= 4)
+			{
+				//some message?
+				return;
+			}		
+					
 			//bearLocationLength will be 4 at this point
 			for (var i = 0; i < bearLocationLength; ++i)
 			{
@@ -576,15 +547,88 @@
 		
 		}
 		
+		
+		
+		function checkBlockHit()
+		{
+			if (stage === 0)
+			{
+				if (currClicked.length !== 4)
+				{
+					alert("You must place the bears in a 2x2 block formation!");
+					return false;
+				}
+				
+				var tmp_rows = getIndices(currClicked, 0);
+				var tmp_cols = getIndices(currClicked, 1);
+
+				if (tmp_rows.length !== 2 || tmp_cols.length !== 2)
+				{
+					alert("You must place the bears in a 2x2 block formation!");
+					return false;
+				}
+				
+				return true;
+			}
+			else
+			{
+				var currClickedLength = currClicked.length;
+			
+				if (currClickedLength === 0)
+				{
+					alert("You must hit something!");
+					return false;
+				}
+				else if (currClickedLength > 4)
+				{
+					alert("You can only hit at most 4 pieces in a 2x2 block!");
+					return false;
+				}
+				
+				/*
+				var tmp_rows = getIndices(currClicked, 0);
+				var tmp_cols = getIndices(currClicked, 1);
+
+				if (tmp_rows.length > 2 || tmp_cols.length > 2)
+				{
+					alert("You can only hit at most 4 pieces in a 2x2 block!");
+					return false;
+				}				
+				*/
+				
+				
+				if (currClickedLength > 1)
+				{
+					var end = currClickedLength - 1;
+					
+					while (end > 0)
+					{
+						for (var i = 0; i < end; ++i)
+						{
+							if (Math.abs(currClicked[i][0] - currClicked[end][0]) > 1 || Math.abs(currClicked[i][1] - currClicked[end][1]) > 1)
+							{
+								alert("You can only hit at most 4 pieces in a 2x2 block!");
+								return false;						
+							}
+						}
+
+						--end;
+					}					
+				}
+				
+				return true;
+			}
+		}
+		
+		
 		function confirmClicked()
 		{
 			//at bear setting stage
 			if (stage === 0)
 			{
 				//TODO: check bear location
-				if (false)
-				{
-					alert("Invalid input")
+				if (!checkBlockHit())
+				{					
 					return;
 				}
 				
@@ -593,7 +637,10 @@
 				bearLocationLength = bearLocation.length;
 				
 				bear_rows = getIndices(bearLocation, 0);
-				bear_cols = getIndices(bearLocation, 1);				
+				bear_cols = getIndices(bearLocation, 1);		
+
+				console.log("WWWWWWW");
+				console.log(bear_rows);
 				
 				
 				//should be 4, but we can use bearLocation.length for scalability.
@@ -624,7 +671,7 @@
 			else
 			{
 				//Check valid input
-				if (false)
+				if (!checkBlockHit())
 				{
 					return;
 				}
@@ -646,8 +693,36 @@
 				//given the results, repaint map and update coor;
 				
 				
+						
+				
+				paintGrid(newBoard.mask);
+				
+				if (newBoard.state === 0)
+				{
+					//game over
+					stage = 2;
+					
+					$(playerIdDisplay).html("Game Over!");
+					
+					if (turnNumber % 2 === 0)
+					{
+						alert("Player 1 disturbed the bears and is going to jail; Player 2 wins!")
+						
+					}
+					else
+					{
+						alert("Player 2 disturbed the bears and is going to jail; Player 1 wins!")
+					}					
+					
+					var confirmButton = document.getElementById("confirm");
+					confirmButton.disabled = true;
+					confirmButton.style.display = 'none';							
+					
+					return;					
+				}
+				
 				turnNumber++;
-				currClicked = [];				
+				currClicked = [];						
 				
 				if (turnNumber % 2 === 0)
 				{
