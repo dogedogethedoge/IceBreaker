@@ -552,10 +552,55 @@
 	}		
 		
 		
+				//var iceBlock = new Image();
+		//iceBlock.onload = loadElement();
+		//iceBlock.src = "pics/ice_block.png";
+		
+		//var goneIce = new Image();
+		
 		//will be called after calculation has been done to see the grid state
 		function paintGrid(newGrid)
 		{
-		
+			//this will represent y
+			for (var i = 0; i < rawGridSize; ++i)
+			{
+				//this will represent x
+				for (var j = 0; j < rawGridSize; ++j)
+				{
+					if (newGrid[j][i] === 1)
+					{
+						var isBear = false;
+								
+						
+						for (var bearIndex = 0; bearIndex < bearLocationLength; ++bearIndex)
+						{
+							var currBearLoc = bearLocation[bearIndex];
+														
+							if (currBearLoc[0] === j && currBearLoc[1] === i)
+							{
+								isBear = true;
+								break; //this is a bear block
+							}							
+						}
+					
+						if (isBear)
+						{
+							ctx.drawImage(bearImage, i * 40, j * 40, 40, 40);
+						}
+						else
+						{
+							ctx.drawImage(iceBlock, i * 40, j * 40, 40, 40);
+						}					
+					}
+					else
+					{
+						ctx.drawImage(goneIce, i * 40, j * 40, 40, 40);
+					}
+				}
+			}
+			
+			
+			console.log("DONE");
 		}
 		
 		
@@ -880,7 +925,7 @@
 
         <br>
 
-        Enter the size of the square grid (5 to 12): <input type="text" id="grid-size" value="7" class="form-control"
+        Enter the size of the square grid (5 to 12): <input type="text" id="grid-size" value="6" class="form-control"
                                                   required style=";margin: 5px"><br>
         <br>
 
