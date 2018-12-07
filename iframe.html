@@ -71,9 +71,6 @@
             }
         }
 
-
-        var roverDirection = [0]; // 0 - right, 1 - top, 2 - left, 3 - bot
-
         function drawBackground(context) {
             context.beginPath();
             for (var x = 0; x <= gridSize; x += 40) {
@@ -756,13 +753,6 @@
 		}
         function verifyAndStart() 
 		{
-            //console.log("verifying and starting", mineX);
-
-            // Get the value of the input field with id="numb"
-            //maxRoverCount = document.getElementById("rover-count").value;
-			
-			
-			
             gridSize = document.getElementById("grid-size").value;
 			rawGridSize = gridSize;
 
@@ -790,7 +780,6 @@
 				confirmButton.disabled = false;
 				confirmButton.style.display = 'block';						
 				
-                //document.getElementById("rover-count").disabled = true;
                 document.getElementById("grid-size").disabled = true;
                 ctx = canvas.getContext("2d");
                 canvasOffset = $("#canvas").offset();
@@ -806,16 +795,10 @@
                 playerIdDisplay.id = "playerIdDisplay";
                 playerIdDisplay.class = "text-primary";			
 
-                //moveCountDisplay = document.createElement("h4");
-
-                //moveCountDisplay.id = "moveCountDisplay";
-                //moveCountDisplay.class = "text-primary";
                 $(playerIdDisplay).html("Current player: 1");
-                //$(moveCountDisplay).html("Moves so far : " + moveCount);
 
                 var div = document.getElementById("inner");
-                div.appendChild(playerIdDisplay);
-                //div.appendChild(moveCountDisplay);			
+                div.appendChild(playerIdDisplay);		
 				
 				startGame();
 
