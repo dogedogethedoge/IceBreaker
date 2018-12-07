@@ -565,7 +565,7 @@
 				//this will represent x
 				for (var j = 0; j < rawGridSize; ++j)
 				{
-					if (newGrid[j][i] === 1)
+					if (newGrid[i][j] === 1)
 					{
 						var isBear = false;
 								
@@ -594,8 +594,8 @@
 					}
 					else
 					{
-						console.log("SSSXXX");
-						brokenIce.push([i, j]);
+						console.log("SSSXXX", j, i);
+						brokenIce.push([j, i]);
 						ctx.drawImage(goneIce, j * 40, i * 40, 40, 40);
 					}
 				}
