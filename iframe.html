@@ -561,6 +561,7 @@
 		//will be called after calculation has been done to see the grid state
 		function paintGrid(newGrid)
 		{
+			brokenIce = [];
 			//this will represent y
 			for (var i = 0; i < rawGridSize; ++i)
 			{
@@ -585,15 +586,16 @@
 					
 						if (isBear)
 						{
-							ctx.drawImage(bearImage, i * 40, j * 40, 40, 40);
+							ctx.drawImage(bearImage, j * 40, i * 40, 40, 40);
 						}
 						else
 						{
-							ctx.drawImage(iceBlock, i * 40, j * 40, 40, 40);
+							ctx.drawImage(iceBlock, j * 40, i * 40, 40, 40);
 						}					
 					}
 					else
 					{
+						brokenIce.append([i, j]);
 						ctx.drawImage(goneIce, i * 40, j * 40, 40, 40);
 					}
 				}
