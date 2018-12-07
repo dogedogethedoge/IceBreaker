@@ -563,6 +563,10 @@
 		{
 			brokenIce = [];
 			//this will represent y
+			
+			console.log("IN new grid");
+			console.log(newGrid);
+			
 			for (var i = 0; i < rawGridSize; ++i)
 			{
 				//this will represent x
@@ -595,7 +599,8 @@
 					}
 					else
 					{
-						brokenIce.append([i, j]);
+						console.log("SSSXXX");
+						brokenIce.push([i, j]);
 						ctx.drawImage(goneIce, i * 40, j * 40, 40, 40);
 					}
 				}
@@ -748,6 +753,8 @@
 				console.log("ZZZ");
 				console.log(newBoard);
 				console.log(newBoard.mask);
+				
+				board = newBoard
 				
 				//given the results, repaint map and update coor;
 				
