@@ -25,16 +25,14 @@
         <?php include $base."leftMenuGame.php"; ?>
     </nav>
     <article>
-        <h1 id="gameName">Safe Roving</h1>
-        <h3 id="groupName">Team 442</h3>
+        <h1 id="gameName">FREE Ice Breaker</h1>
+        <h3 id="groupName">Latin</h3>
         <h3>Instruction:</h3>
         <div id="gameDesc" class="jumbotron">
             <div>
-                <b>Players</b>
+                <b>Rules</b>
                 <ul>
-                    <li>Player 1 plays first and choose four blocks in a box and places the bears at those locations. </li>
-                    <li>Players alternate removing blocks until the bears all fall.</li>
-                    <li>The winner is the player who forced their opponent to knock all the bears into the water</li>
+                    <li>You are on a trip to break some ice in order to clear the area to build a new vacation resort in Antarctica. The area contains magically floating ice blocks in a 6x6 grid. The ice block can only float if it is in a row or column that has all the ice blocks intact. In addition, there is a group of endangered polar bears sitting in a 2x2 ice block somewhere on the grid (player 1 gets to choose that location). Since they are protected animals, you must not disturb the bears; otherwise, you go to jail! The polar bear will move away if the 2x2 falls. Luckily, your arch-nemesis is also there to help you clear the ice for the resort. You both decide to have a "friendly" wager that will send the loser to jail. Each person will take turns knocking down the ice blocks. You can either hit only one block, or hit the intersections of blocks in order to knock some or all of them down (you can choose between 1 to 4 blocks based on the intersections). Both of you have perfect accuracy in terms of hitting the ice because you both went to NYU on an ice-breaking scholarship, courtesy of the Global Warming Group, and got your PhD in ice breaking. Good luck!</li>
                 </ul>
             </div>
         </div>
@@ -52,13 +50,13 @@
         </div>
         <h3>Play game in pop up window:<h3>
         <form id="gameSettings" class="well"></form>
-        <iframe src="games/iceBreaker/iceBreaker.html" class="game" width="800" height="800"></iframe>
+        <iframe src="games/IceBreaker/iframe.html" class="game" width="800" height="800"></iframe>
 
     </article>
     <?php include $base."footer.php"; ?>
 </div>
 <script type="text/javascript">
-    newWindowBtn(1200,1200,"games/iceBreaker/iceBreaker.html", []);
+    newWindowBtn(1200,1200,"games/IceBreaker/iframe.html", []);
 </script>
 </body>
 </html>

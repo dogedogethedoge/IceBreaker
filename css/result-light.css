@@ -1,21 +1,25 @@
-.container-canvas {
-    margin-right: auto ;
+.container-canvas 
+{
+    margin-right: auto;
     margin-left: auto;
     text-align: center;
     width:100%;
 }
 
-.center{
+.center
+{
     float:none;
-    margin-right: auto ;
+    margin-right: auto;
     margin-left: auto;
 }
 
-h1 {
+h1 
+{
     text-align: center;
 }
 
-.product_container {
+.product_container 
+{
     border: 1px solid black;
     overflow: auto;
 }
