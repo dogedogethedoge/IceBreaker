@@ -15,108 +15,61 @@
 
 
     <script type='text/javascript'>
-
-		var ctx;
-		var gridSize;
-		var rawGridSize;
-	
-		var turnNumber = 0;
-	
-		var bearImage = new Image();
-		//bearImage.onload = loadElement();
+		var bearImage = new Image();		
 		bearImage.src = "pics/polar_bears.png";
 		
-		var iceBlock = new Image();
-		//iceBlock.onload = loadElement();
+		var iceBlock = new Image();		
 		iceBlock.src = "pics/ice_block.png";
 		
-		var goneIce = new Image();
-		//goneIce.onload = loadElement();
+		var goneIce = new Image();		
 		goneIce.src = "pics/gone_block.png";
 		
 		var weakBlock = new Image();
-		//weakBlock.onload = loadElement();
 		weakBlock.src = "pics/weak_block.png";
 		
 		var hitBlock = new Image();
-		//hitBlock.onload = loadElement();
 		hitBlock.src = "pics/blocks_that_will_be_hit.png";
 		
-				
+		var ctx;
+		var gridSize;
+		var	playerOneName
+		var	playerTwoName		
+		var rawGridSize;				
 		var stage = 0;
-		
+		var turnNumber = 0;		
 		var bear_rows;
-		var bear_cols;
-		
+		var bear_cols;		
 		var bearLocation = [];
 		var currClicked = [];
 		var brokenIce = [];
-		var weakIce = [];
-		
-		var bearLocationLength = -1;
-		
+		var weakIce = [];		
+		var bearLocationLength = -1;		
 		var board = {};
 		
-		////////////////////////////////////////
-	
-		//vincent xxx see if you want this
-        var finish = new Image();
-        finish.onload = loadElement();
-        finish.src = "http://res.freestockphotos.biz/pictures/7/7240-illustration-of-a-burst-with-win-text-pv.png";
+		var CONST_BLOCK_SIZE = 40;
+		var CONST_MAX_HIT_HIGHLIGHT = 4;
 
-
-        function loadElement() {
-            return function () {
-                draw(0, 0);
-            }
-        }
-
+		//this function is used to draw the board
         function drawBackground(context) {
             context.beginPath();
-            for (var x = 0; x <= gridSize; x += 40) {
+            for (var x = 0; x <= gridSize; x += CONST_BLOCK_SIZE) {
                 context.moveTo(x, 0);
                 context.lineTo(x, gridSize);
             }
-            for (var x = 0; x <= gridSize; x += 40) {
+            for (var x = 0; x <= gridSize; x += CONST_BLOCK_SIZE) {
                 context.moveTo(0, x);
                 context.lineTo(gridSize, x);
             }
             context.strokeStyle = "black";
             context.stroke();
         }
-        function draw(x, y) {
-		
-		/*
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			//ctx.drawImage(background, 0, 0, gridSize, gridSize);
-			drawBackground(ctx);
-			ctx.drawImage(mothershipRight, 0, 0, 40, 40);
-			for (var c = 0; c < mineCount; c++) 
-			{
-				ctx.drawImage(mine, mineX[c], mineY[c], 40, 40);
-			}		
-		*/
-		
-            if (stage == 0) 
-			{
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                //ctx.drawImage(background, 0, 0, gridSize, gridSize);
-                drawBackground(ctx);
-                ctx.drawImage(mothershipRight, 0, 0, 40, 40);
-                for (var c = 0; c < mineCount; c++) 
-				{
-                    ctx.drawImage(mine, mineX[c], mineY[c], 40, 40);
-                }
-            }
-		
-        }
-		
+        		
 		function getCoordinatesValue(val)
 		{
-			return Math.floor(val / 40);
-		}		
-		
+			return Math.floor(val / CONST_BLOCK_SIZE);
+		}				
 
+		//this is for turn 1 where player 1 will make the bear placement.
         function handleClickPhase0(e) {
 			
             mouseX = parseInt(e.pageX - offsetX);
@@ -129,13 +82,14 @@
 			var removeIndex = -1;
 			var currClickedLength = currClicked.length;
 
+			//if the block clicked was already marked as clicked, this will mark it as not clicked and remove from currClicked
 			for (var i = 0; i < currClickedLength; ++i)
 			{
 				var currClickedLoc = currClicked[i];
 				
 				if (currClickedLoc[0] === x && currClickedLoc[1] === y)
 				{
-					ctx.drawImage(iceBlock, x * 40, y * 40, 40, 40);
+					ctx.drawImage(iceBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 					removeIndex = i;
 					break;
 				}
@@ -147,48 +101,35 @@
 				return;
 			}			
 			
-			if (currClicked.length >= 4)
+			if (currClicked.length >= CONST_MAX_HIT_HIGHLIGHT)
 			{
-				//some message?
+				alert("You already have selected 4 blocks!");
 				return;
 			}		
-		
-			
-			currClicked.push([x, y]);
-           
-			ctx.drawImage(hitBlock, x * 40, y * 40, 40, 40);
-			
-
+					
+			currClicked.push([x, y]);           
+			ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
         }
 
-        function handleClickPhase1(e) {		
-		
-		//vincent xxx >= 4 check should be after
-		/*
-			if (currClicked === null || currClicked === undefined || currClicked.length >= 4)
-			{
-				//some message?
-				return;
-			}
-			*/
-			
+		//this is for after bear placement phase is done
+        function handleClickPhase1(e) {	
             mouseX = parseInt(e.pageX - offsetX);
             mouseY = parseInt(e.pageY - offsetY);
 			
 			x = getCoordinatesValue(parseInt(e.pageX - offsetX));
 			y = getCoordinatesValue(parseInt(e.pageY - offsetY));
-			
-			
+						
 			var removeIndex = -1;
 			var currClickedLength = currClicked.length;
 			
+			//if the block clicked was already marked as clicked, this will mark it as not clicked and remove from currClicked
 			for (var i = 0; i < currClickedLength; ++i)
 			{
 				var currClickedLoc = currClicked[i];
 				
 				if (currClickedLoc[0] === x && currClickedLoc[1] === y)
 				{
-					ctx.drawImage(iceBlock, x * 40, y * 40, 40, 40);
+					ctx.drawImage(iceBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 					removeIndex = i;
 					break;
 				}
@@ -200,9 +141,9 @@
 				return;
 			}						
 			
-			if (currClicked.length >= 4)
-			{
-				//some message?
+			if (currClicked.length >= CONST_MAX_HIT_HIGHLIGHT)
+			{				
+				alert("You already have selected 4 blocks!");
 				return;
 			}		
 					
@@ -228,36 +169,17 @@
 					return; //broken ice clicked, should not do anything
 				}
 			}						
-
-			var currClickedLength = currClicked.length;
-			
-			for (var i = 0; i < currClickedLength; ++i)
-			{
-				var currClickedLoc = currClicked[i];
-				
-				if (currClickedLoc[0] === x && currClickedLoc[1] === y)
-				{
-					//check if cracked was previous state
-					
-				}
-			}
 						
-			currClicked.push([x, y]);
-           
-			ctx.drawImage(hitBlock, x * 40, y * 40, 40, 40);
+			currClicked.push([x, y]);           
+			ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
         }
 
+		//binds the handlers
         function startGame() {
 		
-            $("#canvas").contextmenu(function (e) {
-                if (stage == 0) {
-                    return false;
-                }
-                handleRightClick(e);
+            $("#canvas").contextmenu(function (e) {                
                 return false;
-
             });
-
 
             $("#canvas").click(function (f) {
 				
@@ -265,20 +187,12 @@
                     handleClickPhase0(f);
                 }
                 if (stage == 1) {
-				//vincent xxx both should be 0
+				
                     handleClickPhase1(f);
                 }
-
-
             });
-
-
-        }//]]>
-
-    </script>
-
-    <script>
-
+        }
+  
         $(function () {
             $('#firstButton').popover({
                 container: "body",
@@ -292,10 +206,8 @@
             })
         });
 		
-        function resetGame() {
-            //window.parent.location = window.parent.location.href;
-
-
+		//resets game state
+        function resetGame() {            
             var submitButton = document.getElementById("submit");
 			submitButton.disabled = false;
 			submitButton.style.display = 'block';
@@ -318,67 +230,25 @@
 			//div.removeChild(moveCountDisplay);
 			
 			document.getElementById("grid-size").disabled = false;
+			document.getElementById("player1_name").disabled = false;
+			document.getElementById("player2_name").disabled = false;				
+						
+			stage = 0;
+			turnNumber = 0;		
+			bearLocation = [];
+			currClicked = [];
+			brokenIce = [];
+			weakIce = [];		
+			bearLocationLength = -1;		
+			board = {};			
 			
-			
-			//reset whatever I need vincent xxx
-			
-			/*
-            //console.log("reset pressed", mineX);
-            document.getElementById("submit").disabled = false;
-            //document.getElementById("rover-count").disabled = false;
-            document.getElementById("grid-size").disabled = false;
-            var parent = document.getElementById("inner");
-            var child = document.getElementById("canvas");
-            parent.removeChild(child);
-            var reset = document.getElementById('reset');
-            reset.style.display = "none";
-            var restart = document.getElementById('restart');
-            restart.style.display = "none";
-
-            var playerIdDisplay = document.getElementById('playerIdDisplay');
-            var moveCountDisplay = document.getElementById('moveCountDisplay');
-
-            var div = document.getElementById("inner");
-            div.removeChild(playerIdDisplay);
-            div.removeChild(moveCountDisplay);
-            var finishResults = document.getElementById('finishResults');
-            while (finishResults) {
-                div = document.getElementById("RightPane");
-                div.removeChild(finishResults);
-                finishResults = document.getElementById('finishResults');
-            }
-            var confirm = document.getElementById('ConfirmMines');
-            confirm.style.display = 'none';
-            confirm.disabled = true;
-            var randMines = document.getElementById('RandomMines');
-            randMines.style.display = 'none';
-            randMines.disabled = true;
-
-            moveCount = 0;
-            moveCountDisplay;
-            roverCount = 1;
-            // animation variables
-            roverX = [0];
-            roverY = [0];
-            roverDead = [0];
-            mineX = [];
-            mineY = [];
-            mineAdjMatrix = [];
-            edgeMines = [];
-            expX = [];
-            expY = [];
-            expCount = 0;
-            selected = 0;
-
-            mineCount = mineX.length;
-			*/
-
         }
 		
 		function initMask(size){
 			//new Array
 
 			var mask = new Array(size);
+			
 			//Iter subarrays
 			for (var i = 0; i < size; i++){
 				mask[i] = new Array(size);
@@ -472,111 +342,119 @@
 			return (ind_arr_uniq);
 		}
 
-	function copy(obj) {
-		if (!obj) {
-		  return obj;
+		function copy(obj) {
+			if (!obj) {
+			  return obj;
+			}
+		  
+			let v;
+			let obj2 = Array.isArray(obj) ? [] : {};
+			for (const k in obj) {
+			  v = obj[k];
+			  obj2[k] = (typeof v === "object") ? copy(v) : v;
+			}
+		  
+			return obj2;
 		}
-	  
-		let v;
-		let obj2 = Array.isArray(obj) ? [] : {};
-		for (const k in obj) {
-		  v = obj[k];
-		  obj2[k] = (typeof v === "object") ? copy(v) : v;
-		}
-	  
-		return obj2;
-	}
 
-	//Bear Status
-	function bearStatus(mask, bear_rows, bear_cols){
-		var rowSums = Array.apply(null, Array(bear_rows.length)).map(Number.prototype.valueOf,0);
-		var colSums = Array.apply(null, Array(bear_cols.length)).map(Number.prototype.valueOf,0);
+		//Bear Status
+		function bearStatus(mask, bear_rows, bear_cols){
+			var rowSums = Array.apply(null, Array(bear_rows.length)).map(Number.prototype.valueOf,0);
+			var colSums = Array.apply(null, Array(bear_cols.length)).map(Number.prototype.valueOf,0);
 
-		//Iter through Bear rows
-		for (var i = 0; i < bear_rows.length; i++){
-			for (var j = 0; j < mask.length; j++){
-				rowSums[i] += mask[bear_rows[i]][j];
+			//Iter through Bear rows
+			for (var i = 0; i < bear_rows.length; i++){
+				for (var j = 0; j < mask.length; j++){
+					rowSums[i] += mask[bear_rows[i]][j];
+				}
 			}
-		}
-		
-		//Iter through Bear cols
-		for (var i = 0; i < mask.length; i++){
-			for (var j = 0; j < bear_cols.length; j++){
-				colSums[j] += mask[i][bear_cols[j]];
+			
+			//Iter through Bear cols
+			for (var i = 0; i < mask.length; i++){
+				for (var j = 0; j < bear_cols.length; j++){
+					colSums[j] += mask[i][bear_cols[j]];
+				}
+			} 
+			
+			//Concat
+			var sums = rowSums.concat(colSums);
+			//Count how many are broken
+			var counts = 0;
+			for (var i = 0; i < sums.length; i++){
+				if (sums[i] != mask.length){
+					counts++;
+				}
 			}
-		} 
-		
-		//Concat
-		var sums = rowSums.concat(colSums);
-		//Count how many are broken
-		var counts = 0;
-		for (var i = 0; i < sums.length; i++){
-			if (sums[i] != mask.length){
-				counts++;
+			if (counts == sums.length){
+				return (0);
+			} else {
+				return (1);
 			}
-		}
-		if (counts == sums.length){
-			return (0);
-		} else {
-			return (1);
-		}
+			
+		}		
+	
+		//checks if the given coordinate is part of the 2x2 bear cluster
+		function checkIsBearLocation(x, y)
+		{
+			for (var bearIndex = 0; bearIndex < bearLocationLength; ++bearIndex)
+			{
+				var currBearLoc = bearLocation[bearIndex];
+											
+				if (currBearLoc[0] === x && currBearLoc[1] === y)
+				{
+					return true;
+				}							
+			}		
 		
-	}		
+			return false;
+		}
 				
 		//will be called after calculation has been done to see the grid state
 		function paintGrid(newGrid)
 		{
 			brokenIce = [];
-			//this will represent y
 			
+			//this will represent y coordinate			
 			for (var i = 0; i < rawGridSize; ++i)
 			{
-				//this will represent x
+				//this will represent x coordinate
 				for (var j = 0; j < rawGridSize; ++j)
 				{
 					if (newGrid[i][j] === 1)
 					{
 						var isBear = false;
-								
-						
-						for (var bearIndex = 0; bearIndex < bearLocationLength; ++bearIndex)
-						{
-							var currBearLoc = bearLocation[bearIndex];
-														
-							if (currBearLoc[0] === j && currBearLoc[1] === i)
-							{
-								isBear = true;
-								break; //this is a bear block
-							}							
-						}
 					
-						if (isBear)
+						if (checkIsBearLocation(j, i))
 						{
-							ctx.drawImage(bearImage, j * 40, i * 40, 40, 40);
+							ctx.drawImage(bearImage, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 						}
 						else
 						{
-							ctx.drawImage(iceBlock, j * 40, i * 40, 40, 40);
+							ctx.drawImage(iceBlock, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 						}					
 					}
 					else
 					{
-						console.log("SSSXXX", j, i);
-						brokenIce.push([j, i]);
-						ctx.drawImage(goneIce, j * 40, i * 40, 40, 40);
-
+						if (checkIsBearLocation(j, i))
+						{
+							ctx.drawImage(bearImage, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						}
+						else
+						{
+							brokenIce.push([j, i]);
+							ctx.drawImage(goneIce, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);						
+						}
 					}
 				}
 			}
 		}
 		
-		
-		
+		//check if the block hit values are valid
 		function checkBlockHit()
 		{
 			if (stage === 0)
 			{
-				if (currClicked.length !== 4)
+				if (currClicked.length !== CONST_MAX_HIT_HIGHLIGHT)
 				{
 					alert("You must place the bears in a 2x2 block formation!");
 					return false;
@@ -602,24 +480,12 @@
 					alert("You must hit something!");
 					return false;
 				}
-				else if (currClickedLength > 4)
+				else if (currClickedLength > CONST_MAX_HIT_HIGHLIGHT)
 				{
 					alert("You can only hit at most 4 pieces in a 2x2 block!");
 					return false;
 				}
-				
-				/*
-				var tmp_rows = getIndices(currClicked, 0);
-				var tmp_cols = getIndices(currClicked, 1);
-
-				if (tmp_rows.length > 2 || tmp_cols.length > 2)
-				{
-					alert("You can only hit at most 4 pieces in a 2x2 block!");
-					return false;
-				}				
-				*/
-				
-				
+								
 				if (currClickedLength > 1)
 				{
 					var end = currClickedLength - 1;
@@ -642,21 +508,18 @@
 				return true;
 			}
 		}
-		
-		
-		
+						
+		//game start with the player names and grid size
 		function confirmClicked()
 		{
 			//at bear setting stage
 			if (stage === 0)
 			{
-				//TODO: check bear location
 				if (!checkBlockHit())
 				{					
 					return;
 				}
 				
-				//how to set it???
 				bearLocation = currClicked;
 				bearLocationLength = bearLocation.length;
 				
@@ -668,22 +531,20 @@
 				
 				for (var i = 0; i < bearLength; ++i)
 				{
-					ctx.drawImage(bearImage, bearLocation[i][0] * 40, bearLocation[i][1] * 40, 40, 40);
+					ctx.drawImage(bearImage, bearLocation[i][0] * CONST_BLOCK_SIZE, bearLocation[i][1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 				}
-				
-				
+								
 				stage = 1;
 				turnNumber++;
 				currClicked = [];
-
 				
 				if (turnNumber % 2 === 0)
 				{
-					$(playerIdDisplay).html("Current player: 1");
+					$(playerIdDisplay).html("Current player: " + playerOneName);
 				}
 				else
 				{
-					$(playerIdDisplay).html("Current player: 2");
+					$(playerIdDisplay).html("Current player: " + playerTwoName);
 				}
 			}
 			else
@@ -698,11 +559,7 @@
 				
 				board = newBoard
 				
-				//given the results, repaint map and update coor;
-				
-				
-						
-				
+				//given the results, repaint map and update coor;								
 				paintGrid(newBoard.mask);
 				
 				if (newBoard.state === 0)
@@ -734,37 +591,32 @@
 				
 				if (turnNumber % 2 === 0)
 				{
-					$(playerIdDisplay).html("Current player: 1");
+					$(playerIdDisplay).html("Current player: " + playerOneName);
 				}
 				else
 				{
-					$(playerIdDisplay).html("Current player: 2");
+					$(playerIdDisplay).html("Current player: " + playerTwoName);
 				}				
-				
-				
-				/*
-				for (var i = 0; i < result???; ++i)
-				{
-					ctx.drawImage(bearImage, bearLocation[i][0] * 40, bearLocation[i][1] * 40, 40, 40);
-				}				
-				*/
-				
+								
 			}
 			
 			//check if valid, if so, increment turns, and then send backend
 		}
+		
+		//called after submit is clicked. Make sure the given parameters are correct and initialize the next stage
         function verifyAndStart() 
 		{
             gridSize = document.getElementById("grid-size").value;
+			playerOneName = document.getElementById("player1_name").value;
+			playerTwoName = document.getElementById("player2_name").value;
 			rawGridSize = gridSize;
-
            			
 			if (isValidInput(gridSize))
 			{
                 var reset = document.getElementById('reset');
                 reset.style.display = "block";
 				
-				gridSize = gridSize * 40;
+				gridSize = gridSize * CONST_BLOCK_SIZE;
                 var reset = document.getElementById('reset');
                 
                 canvas = document.createElement("canvas");
@@ -783,6 +635,9 @@
 				confirmButton.style.display = 'block';						
 				
                 document.getElementById("grid-size").disabled = true;
+				document.getElementById("player1_name").disabled = true;
+				document.getElementById("player2_name").disabled = true;				
+				
                 ctx = canvas.getContext("2d");
                 canvasOffset = $("#canvas").offset();
                 offsetX = canvasOffset.left;
@@ -797,7 +652,7 @@
                 playerIdDisplay.id = "playerIdDisplay";
                 playerIdDisplay.class = "text-primary";			
 
-                $(playerIdDisplay).html("Current player: 1");
+                $(playerIdDisplay).html("Player 1 will choose a 2x2 block where the bears are located.");
 
                 var div = document.getElementById("inner");
                 div.appendChild(playerIdDisplay);		
@@ -808,12 +663,9 @@
 				{
 					for (var j = 0; j < gridSize; ++j)
 					{
-						ctx.drawImage(iceBlock, i * 40, j * 40, 40, 40);
+						ctx.drawImage(iceBlock, i * CONST_BLOCK_SIZE, j * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 					}
 				}
-					
-					
-								
 			}
 			else {
                 alert("Invalid input")
@@ -827,7 +679,6 @@
                 return true;
             }
         }
-
 
     </script>
 
@@ -861,6 +712,18 @@
         Enter the size of the square grid (5 to 12): <input type="text" id="grid-size" value="6" class="form-control"
                                                   required style=";margin: 5px"><br>
         <br>
+		
+        <br>
+
+        Enter Player 1 name: <input type="text" id="player1_name" value="Foo" class="form-control"
+                                                  required style=";margin: 5px"><br>
+        <br>
+
+        <br>
+
+        Enter Player 2 name: <input type="text" id="player2_name" value="Bar" class="form-control"
+                                                  required style=";margin: 5px"><br>
+        <br>		
 
 
         <button type="button" id="submit" class="btn btn-primary" style=";margin: 5px" onclick="verifyAndStart()">
