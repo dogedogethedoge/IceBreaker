@@ -121,9 +121,6 @@
 		
 
         function handleClickPhase0(e) {
-			console.log("handleClickPhase0");
-			console.log(currClicked);
-			console.log(currClicked.length);
 			
             mouseX = parseInt(e.pageX - offsetX);
             mouseY = parseInt(e.pageY - offsetY);
@@ -138,11 +135,9 @@
 			for (var i = 0; i < currClickedLength; ++i)
 			{
 				var currClickedLoc = currClicked[i];
-				console.log(currClickedLoc);
 				
 				if (currClickedLoc[0] === x && currClickedLoc[1] === y)
 				{
-					console.log("found at location", x, y);
 					ctx.drawImage(iceBlock, x * 40, y * 40, 40, 40);
 					removeIndex = i;
 					break;
@@ -161,12 +156,6 @@
 				return;
 			}		
 		
-
-			
-
-					
-			
-			console.log("OOOOO", x, y);
 			
 			currClicked.push([x, y]);
            
@@ -176,8 +165,6 @@
         }
 
         function handleClickPhase1(e) {		
-			console.log("LLL", currClicked);
-			console.log(currClicked);
 		
 		//vincent xxx >= 4 check should be after
 		/*
@@ -188,8 +175,6 @@
 			}
 			*/
 			
-			
-			console.log("YOYO");
             mouseX = parseInt(e.pageX - offsetX);
             mouseY = parseInt(e.pageY - offsetY);
 			
@@ -203,11 +188,9 @@
 			for (var i = 0; i < currClickedLength; ++i)
 			{
 				var currClickedLoc = currClicked[i];
-				console.log(currClickedLoc);
 				
 				if (currClickedLoc[0] === x && currClickedLoc[1] === y)
 				{
-					console.log("found at location", x, y);
 					ctx.drawImage(iceBlock, x * 40, y * 40, 40, 40);
 					removeIndex = i;
 					break;
@@ -262,9 +245,6 @@
 				}
 			}
 						
-			
-			console.log("OOOOO", x, y);
-			
 			currClicked.push([x, y]);
            
 			ctx.drawImage(hitBlock, x * 40, y * 40, 40, 40);
@@ -272,8 +252,6 @@
 
         function startGame() {
 		
-			console.log("startGame called")
-
             $("#canvas").contextmenu(function (e) {
                 if (stage == 0) {
                     return false;
@@ -319,8 +297,7 @@
 		
         function resetGame() {
             //window.parent.location = window.parent.location.href;
-			
-			console.log("OOOOOOOOOOO");
+
 
             var submitButton = document.getElementById("submit");
 			submitButton.disabled = false;
@@ -403,8 +380,7 @@
 		
 		function initMask(size){
 			//new Array
-			
-			console.log("initMask called", size);
+
 			var mask = new Array(size);
 			//Iter subarrays
 			for (var i = 0; i < size; i++){
@@ -413,9 +389,6 @@
 					mask[i][j] = 1;
 				}
 			}
-			
-			
-			console.log(mask);
 			
 			return (mask);
 		}
@@ -484,6 +457,9 @@
 		   new_board = {"state":state,
 						"mask":new_mask
 					   }
+
+			console.log("new_board", new_board);
+
 		   return (new_board);
 		}		
 		
@@ -542,8 +518,7 @@
 				counts++;
 			}
 		}
-		
-		if (counts == 0){
+		if (counts == sums.length){
 			return (0);
 		} else {
 			return (1);
@@ -556,9 +531,6 @@
 		{
 			brokenIce = [];
 			//this will represent y
-			
-			console.log("IN new grid");
-			console.log(newGrid);
 			
 			for (var i = 0; i < rawGridSize; ++i)
 			{
@@ -583,12 +555,10 @@
 					
 						if (isBear)
 						{
-							console.log("SSSXXX222");
 							ctx.drawImage(bearImage, j * 40, i * 40, 40, 40);
 						}
 						else
 						{
-							console.log("SSSXXX333");
 							ctx.drawImage(iceBlock, j * 40, i * 40, 40, 40);
 						}					
 					}
@@ -597,12 +567,10 @@
 						console.log("SSSXXX", j, i);
 						brokenIce.push([j, i]);
 						ctx.drawImage(goneIce, j * 40, i * 40, 40, 40);
+
 					}
 				}
 			}
-			
-			
-			console.log("DONE");
 		}
 		
 		
@@ -695,12 +663,8 @@
 				bearLocation = currClicked;
 				bearLocationLength = bearLocation.length;
 				
-				bear_rows = getIndices(bearLocation, 0);
-				bear_cols = getIndices(bearLocation, 1);		
-
-				console.log("WWWWWWW");
-				console.log(bear_rows);
-				
+				bear_rows = getIndices(bearLocation, 1);
+				bear_cols = getIndices(bearLocation, 0);						
 				
 				//should be 4, but we can use bearLocation.length for scalability.
 				var bearLength = bearLocation.length;
@@ -714,9 +678,7 @@
 				stage = 1;
 				turnNumber++;
 				currClicked = [];
-				
-				console.log("XXXXXX");
-				console.log(currClicked);
+
 				
 				if (turnNumber % 2 === 0)
 				{
@@ -733,21 +695,9 @@
 				if (!checkBlockHit())
 				{
 					return;
-				}
-				
-				//call issac function
-				
-				console.log("YYY");
-				console.log(board);
-				//console.log(board.mask);
-				
-				
+				}		
 				
 				var newBoard = updateMask(board, currClicked);
-				
-				console.log("ZZZ");
-				console.log(newBoard);
-				console.log(newBoard.mask);
 				
 				board = newBoard
 				
@@ -853,10 +803,6 @@
                 
                 stage = 0;
 				board = {"state": 1, "mask": initMask(rawGridSize)};
-		
-				console.log("YYY222");
-				console.log(board);
-				console.log(board.mask);
 				
                 var playerIdDisplay = document.createElement("h4");
                 playerIdDisplay.id = "playerIdDisplay";
