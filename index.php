@@ -36,18 +36,7 @@
                 </ul>
             </div>
         </div>
-	<h3>Leaderboard</h3>
-        <div id="scoreArea", class="jumbotron">
-            <?php
-            include $base."getScore.php";
-            /*
-            * arg1: gameName, should be the same as the dir name
-            * arg2: if your score is sortable, pass 1 if higher score is better, 0
-            *       if smaller score is better. Otherwise no need to pass variable
-            */
-            getScore("Safe Roving", 0);
-            ?>
-        </div>
+
         <h3>Play game in pop up window:<h3>
         <form id="gameSettings" class="well"></form>
         <iframe src="games/IceBreaker/iframe.html" class="game" width="800" height="800"></iframe>
