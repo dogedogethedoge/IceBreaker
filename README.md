@@ -1,4 +1,4 @@
-# game2
+# IceBreaker
 
 This game assumes idealistic conditions that you will most likely not be able to see in real life. It assumes perfectly elastic collisions when the ice blocks are hit. In addition, assume low static friction, so in order for a ice block to stay up, it must be supported by either a full row or column.
 
