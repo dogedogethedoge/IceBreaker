@@ -567,6 +567,11 @@
 					//game over
 					stage = 2;
 					
+					for (i = 0; i < CONST_MAX_HIT_HIGHLIGHT; ++i)
+					{
+						ctx.drawImage(goneIce, bearLocation[i][0] * CONST_BLOCK_SIZE, bearLocation[i][1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+					}
+					
 					$(playerIdDisplay).html("Game Over!");
 					
 					if (turnNumber % 2 === 0)
@@ -758,7 +763,8 @@
 			Rules <br> <br />
 			- Player 1 will choose a 2x2 set of blocks for the polar bears. <br> <br />
 			- Players will alternate turns choosing up to four touching squares to knock on each turn. <br> <br />
-			- The game continues until a player knocks all four polar bears into the water.  They can hold each up until if only a few of them are knocked in.
+			- The game continues until a player knocks all four polar bears into the water.  They can hold each up until if only a few of them are knocked in. <br> <br />
+			- Ice blocks will only stay up if it is in either a complete row or complete column. <br> <br />
 			</em>
 			Good Luck!        
         </div>

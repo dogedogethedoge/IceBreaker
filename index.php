@@ -47,7 +47,7 @@
 
         <h3>Play game in pop up window:<h3>
         <form id="gameSettings" class="well"></form>
-        <iframe src="iframe.html" class="game" width="800" height="800"></iframe>
+        <iframe src="games/Icebreaker/iframe.html" class="game" width="800" height="800"></iframe>
 
     </article>
     <?php include $base."footer.php"; ?>
