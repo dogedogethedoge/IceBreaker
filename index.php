@@ -30,11 +30,6 @@
         <h3>Instruction:</h3>
         <div id="gameDesc" class="jumbotron">
             <div>
-                Dear Dr. Nepharious,
-                I see you have accepted my wager.  The building of my new semi-aquatic lair will commence as soon as we remove the offending ice.  I will have the polar bears placed on a 2x2 ice block of your choice (Player 1) after which we can commence in our game.  We will take turns breaking blocks of ice until the loser knocks the bears into the water.  Don't forget the Mounties will come for the player who knocks the bears into the water, so be careful.
-                <br />
-                <br>
-                <br />
                 <em>
                 Rules <br> <br />
                 - Player 1 will choose a 2x2 set of blocks for the polar bears. <br> <br />
@@ -53,7 +48,7 @@
     <?php include $base."footer.php"; ?>
 </div>
 <script type="text/javascript">
-    newWindowBtn(1200,1200,"games/IceBreaker/iframe.html", []);
+    newWindowBtn(1200,1200,"iframe.html", []);
 </script>
 </body>
 </html>
