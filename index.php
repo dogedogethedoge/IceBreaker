@@ -48,7 +48,7 @@
     <?php include $base."footer.php"; ?>
 </div>
 <script type="text/javascript">
-    newWindowBtn(1200,1200,"iframe.html", []);
+    newWindowBtn(1200,1200,"games/Icebreaker/iframe.html", []);
 </script>
 </body>
 </html>
