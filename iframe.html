@@ -69,6 +69,7 @@
 			return Math.floor(val / CONST_BLOCK_SIZE);
 		}				
 
+		
 		//this is for turn 1 where player 1 will make the bear placement.
         function handleClickPhase0(e) {
 			
@@ -111,6 +112,9 @@
 			ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
         }
 
+		
+		//xxxxxxxxxxxxxxxx only handle1 will need to update intersection
+		
 		//this is for after bear placement phase is done
         function handleClickPhase1(e) {	
             mouseX = parseInt(e.pageX - offsetX);
@@ -426,7 +430,8 @@
 					
 						if (checkIsBearLocation(j, i))
 						{
-							ctx.drawImage(bearImage, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+							continue;
+							//ctx.drawImage(bearImage, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 						}
 						else
 						{
@@ -437,7 +442,8 @@
 					{
 						if (checkIsBearLocation(j, i))
 						{
-							ctx.drawImage(bearImage, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+							continue;
+							//ctx.drawImage(bearImage, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 						}
 						else
 						{
@@ -529,10 +535,26 @@
 				//should be 4, but we can use bearLocation.length for scalability.
 				var bearLength = bearLocation.length;
 				
+				//find the most left,north bear space
+				
+				var min_x = gridSize;
+				var min_y = gridSize;
+				
 				for (var i = 0; i < bearLength; ++i)
 				{
-					ctx.drawImage(bearImage, bearLocation[i][0] * CONST_BLOCK_SIZE, bearLocation[i][1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+					if (bearLocation[i][0] <  min_x)
+					{
+						min_x = bearLocation[i][0];
+					}
+					
+					if (bearLocation[i][1] < min_y)
+					{
+						min_y = bearLocation[i][1];
+					}
+					//ctx.drawImage(bearImage, bearLocation[i][0] * CONST_BLOCK_SIZE, bearLocation[i][1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 				}
+				
+				ctx.drawImage(bearImage, min_x * CONST_BLOCK_SIZE, min_y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE * 2, CONST_BLOCK_SIZE * 2);
 								
 				stage = 1;
 				turnNumber++;
