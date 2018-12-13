@@ -32,9 +32,10 @@
             <div>
                 <em>
                 Rules <br> <br />
-                - Player 1 will choose a 2x2 set of blocks for the polar bears. <br> <br />
-                - Players will alternate turns choosing up to four touching squares to knock on each turn. <br> <br />
-                - The game continues until a player knocks all four polar bears into the water.  They can hold each up until if only a few of them are knocked in.
+				- Player 1 will choose a 2x2 set of blocks for the polar bears. <br> <br />
+				- Players will alternate turns choosing where to hit the blocks that do not contain bears each turn, the intersections may be hit as well. <br> <br />
+				- The game continues until a player knocks all four polar bears into the water.  They can hold each up until if only a few of them are knocked in. <br> <br />
+				- Ice blocks will only stay up if it is in either a complete row or complete column. <br> <br />
                 </em>
                 Good Luck!     
             </div>

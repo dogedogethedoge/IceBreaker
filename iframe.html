@@ -32,6 +32,7 @@
 		
 		var ctx;
 		var gridSize;
+		var maxArrSize;
 		var	playerOneName
 		var	playerTwoName		
 		var rawGridSize;				
@@ -48,7 +49,8 @@
 		
 		var CONST_BLOCK_SIZE = 40;
 		var CONST_MAX_HIT_HIGHLIGHT = 4;
-
+		var CONST_INTERSECTION_RADIUS = 6;
+		
 		//this function is used to draw the board
         function drawBackground(context) {
             context.beginPath();
@@ -73,11 +75,11 @@
 		//this is for turn 1 where player 1 will make the bear placement.
         function handleClickPhase0(e) {
 			
-            mouseX = parseInt(e.pageX - offsetX);
-            mouseY = parseInt(e.pageY - offsetY);
+            var mouseX = parseInt(e.pageX - offsetX);
+            var mouseY = parseInt(e.pageY - offsetY);
 			
-			x = getCoordinatesValue(parseInt(e.pageX - offsetX));
-			y = getCoordinatesValue(parseInt(e.pageY - offsetY));
+			var x = getCoordinatesValue(parseInt(e.pageX - offsetX));
+			var y = getCoordinatesValue(parseInt(e.pageY - offsetY));
 						
 			
 			var removeIndex = -1;
@@ -111,73 +113,397 @@
 			currClicked.push([x, y]);           
 			ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
         }
-
 		
-		//xxxxxxxxxxxxxxxx only handle1 will need to update intersection
-		
-		//this is for after bear placement phase is done
-        function handleClickPhase1(e) {	
-            mouseX = parseInt(e.pageX - offsetX);
-            mouseY = parseInt(e.pageY - offsetY);
-			
-			x = getCoordinatesValue(parseInt(e.pageX - offsetX));
-			y = getCoordinatesValue(parseInt(e.pageY - offsetY));
-						
-			var removeIndex = -1;
-			var currClickedLength = currClicked.length;
-			
-			//if the block clicked was already marked as clicked, this will mark it as not clicked and remove from currClicked
-			for (var i = 0; i < currClickedLength; ++i)
-			{
-				var currClickedLoc = currClicked[i];
-				
-				if (currClickedLoc[0] === x && currClickedLoc[1] === y)
-				{
-					ctx.drawImage(iceBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
-					removeIndex = i;
-					break;
-				}
-			}			
-						
-			if (removeIndex >= 0)
-			{
-				currClicked.splice(removeIndex, 1);
-				return;
-			}						
-			
-			if (currClicked.length >= CONST_MAX_HIT_HIGHLIGHT)
-			{				
-				alert("You already have selected 4 blocks!");
-				return;
-			}		
-					
-			//bearLocationLength will be 4 at this point
+		function checkBearLoc(x, y)
+		{
 			for (var i = 0; i < bearLocationLength; ++i)
 			{
 				var currBearLoc = bearLocation[i];
 				
 				if (currBearLoc[0] === x && currBearLoc[1] === y)
 				{
-					return; //bear clicked, should not do anything
+					return true; //bear clicked, should not do anything
 				}
-			}			
-						
-			var brokenIceLength = brokenIce.length;
-						
-			for (var i = 0; i < brokenIceLength; ++i)
+			}
+			
+			return false;
+		}
+		
+		//xxxxxxxxxxxxxxxx only handle1 will need to update intersection
+		//this is the new one
+		function handleClickPhase1(e) {
+			console.log("newhandleClickPhase1");
+			
+            var mouseX = parseInt(e.pageX - offsetX);
+            var mouseY = parseInt(e.pageY - offsetY);
+			
+			var x = getCoordinatesValue(parseInt(e.pageX - offsetX));
+			var y = getCoordinatesValue(parseInt(e.pageY - offsetY));
+			
+			//if bear clicked, don't do anything
+			if(checkBearLoc(x, y))
 			{
-				var currBrokenLoc = brokenIce[i];
-				
-				if (currBrokenLoc[0] === x && currBrokenLoc[1] === y)
+				return;
+			}
+					
+			var currClickedLength = currClicked.length;
+			
+			//unselect the original
+			if (currClickedLength > 0)
+			{
+				for (var i = 0; i < currClickedLength; ++i)
 				{
-					return; //broken ice clicked, should not do anything
+					var currClickedLoc = currClicked[i];
+					
+					ctx.drawImage(iceBlock, currClickedLoc[0] * CONST_BLOCK_SIZE, currClickedLoc[1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);				
 				}
-			}						
-						
-			currClicked.push([x, y]);           
-			ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
-        }
+				
+				currClicked = [];
+			}
+			
+			
+			
+////////////////////////////////////////////
+			console.log("checkSector", x, y, mouseX, mouseY)
+			
+			var lowerX = x * 40;
+			var lowerY = y * 40;
+			var upperX = lowerX + 40;
+			var upperY = lowerY + 40;
+			var currX;
+			var currY;			
+			var containsBearLoc = false;
+			
+			if ((mouseX - lowerX) <= CONST_INTERSECTION_RADIUS && (mouseY - lowerY) <= CONST_INTERSECTION_RADIUS) //northwest
+			{
+				currX = x - 1;
+				currY = y - 1;
+				
+				if (currX >= 0 && currY >= 0)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);					
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}
+				}
+				
+				currX = x;
+				currY = y - 1;
+				
+				if (currY >= 0)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);					
+					}	
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
 
+				currX = x - 1;
+				currY = y;
+				
+				if (currX >= 0)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);					
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);		
+			}
+			else if ((upperX - mouseX) <= CONST_INTERSECTION_RADIUS && (mouseY - lowerY) <= CONST_INTERSECTION_RADIUS) //northeast
+			{
+				currX = x + 1;
+				currY = y - 1;
+				
+				if (currX <= maxArrSize && currY >= 0)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);					
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+				
+				currX = x;
+				currY = y - 1;
+				
+				if (currY >= 0)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+
+				currX = x + 1;
+				currY = y;
+				
+				if (currX <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);				
+			}
+			else if ((mouseX - lowerX) <= CONST_INTERSECTION_RADIUS && (upperY - mouseY) <= CONST_INTERSECTION_RADIUS) //southwest
+			{
+				currX = x - 1;
+				currY = y + 1;
+				
+				if (currX >= 0 && currY <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+				
+				currX = x;
+				currY = y + 1;
+				
+				if (currY <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+
+				currX = x - 1;
+				currY = y;
+				
+				if (currX <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);				
+			}
+			else if ((upperX - mouseX) <= CONST_INTERSECTION_RADIUS && (upperY - mouseY) <= CONST_INTERSECTION_RADIUS) //southeast
+			{
+				currX = x + 1;
+				currY = y + 1;
+				
+				if (currX <= maxArrSize && currY <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+				
+				currX = x;
+				currY = y + 1;
+				
+				if (currY <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+
+				currX = x + 1;
+				currY = y;
+				
+				if (currX <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+				
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);	
+			}
+			
+			//now, only north, east, south, and west are possible
+			else if ((mouseX - lowerX) <= CONST_INTERSECTION_RADIUS) //west
+			{
+				currX = x - 1;
+				currY = y;
+				
+				if (currX >= 0)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+				
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);				
+			}
+			else if ((upperX - mouseX) <= CONST_INTERSECTION_RADIUS) //east
+			{
+				currX = x + 1;
+				currY = y;
+				
+				if (currX <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+				
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);					
+			}
+			else if ((mouseY - lowerY) <= CONST_INTERSECTION_RADIUS) //north
+			{
+				currX = x;
+				currY = y - 1;
+				
+				if (currY >= 0)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+					else
+					{
+						currClicked = [];
+						return;
+					}					
+				}
+				
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);					
+			}
+			else if ((upperY - mouseY) <= CONST_INTERSECTION_RADIUS) //south
+			{
+				currX = x;
+				currY = y + 1;
+				
+				if (currY <= maxArrSize)
+				{
+					if (!checkBearLoc(currX, currY))
+					{
+						//ctx.drawImage(hitBlock, currX * CONST_BLOCK_SIZE, currY * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						currClicked.push([currX, currY]);
+					}
+				}
+				
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);					
+			}
+			else //only 1 block
+			{
+				//ctx.drawImage(hitBlock, x * CONST_BLOCK_SIZE, y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+				currClicked.push([x, y]);
+			}
+			
+			console.log(currClicked);
+			
+			currClickedLength = currClicked.length;
+			
+			for (var i = 0; i < currClickedLength; ++i)
+			{	
+				currClickedLoc = currClicked[i];				
+				ctx.drawImage(hitBlock, currClickedLoc[0] * CONST_BLOCK_SIZE, currClickedLoc[1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+			}
+				
+			
+			
+			//need to check if bear is hit???
+		}
+				
 		//binds the handlers
         function startGame() {
 		
@@ -634,6 +960,7 @@
         function verifyAndStart() 
 		{
             gridSize = document.getElementById("grid-size").value;
+			maxArrSize = gridSize - 1;
 			playerOneName = document.getElementById("player1_name").value;
 			playerTwoName = document.getElementById("player2_name").value;
 			rawGridSize = gridSize;
@@ -784,7 +1111,7 @@
 			<em>
 			Rules <br> <br />
 			- Player 1 will choose a 2x2 set of blocks for the polar bears. <br> <br />
-			- Players will alternate turns choosing up to four touching squares to knock on each turn. <br> <br />
+			- Players will alternate turns choosing where to hit the blocks that do not contain bears each turn, the intersections may be hit as well. <br> <br />
 			- The game continues until a player knocks all four polar bears into the water.  They can hold each up until if only a few of them are knocked in. <br> <br />
 			- Ice blocks will only stay up if it is in either a complete row or complete column. <br> <br />
 			</em>
