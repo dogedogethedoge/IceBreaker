@@ -1100,6 +1100,8 @@
 			{
 				console.log("BOT IS GOING TO LOSE");
 				console.log(validMove);			
+				var newBoard = updateMask(board, validMove);
+				paintGrid(newBoard.mask);
 				//game over
 				stage = 2;
 				
