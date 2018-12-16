@@ -731,7 +731,7 @@
 		}
 
 
-		function willFall(board, currClicked){
+		function willFallOld(board, currClicked){
 			//Temp board
 			var new_mask = copy(board.mask);
 			var hits = flipAxes(currClicked);
@@ -754,6 +754,50 @@
 			
 			return (fallen);
 
+		}
+
+		function willFall(board, currClicked){
+			//Temp board
+			var new_mask = copy(board.mask);
+			var hits = flipAxes(currClicked);
+
+			//Update board for hits
+			for (var i = 0; i < hits.length; i++){
+				new_mask[hits[i][0]][hits[i][1]] = 0;
+			}
+					
+			var indices = combinations(new_mask);
+			//Update board
+			for (var i = 0; i < indices.length; i++){
+				var ix = indices[i][0];
+				var iy = indices[i][1];
+				new_mask[ix][iy] = 0;
+			}
+
+			var fallen = [];
+			
+			var state = bearStatus(new_mask, bear_rows, bear_cols);
+			
+			for (var i = 0; i < indices.length; i++){
+				var ix = indices[i][0];
+				var iy = indices[i][1];
+				
+				var b = 0;
+				
+				for (var j = 0; j < bearLocation.length; j++){
+					if ((ix == bearLocation[j][1]) & (iy == bearLocation[j][0])){
+						if (state == 0){
+							b++;
+						}
+					}
+				}
+
+				if (b == 0){
+					fallen.push([iy, ix]);
+				}
+			}
+			console.log("fallen", fallen);
+			return (fallen);
 		}
 
 
