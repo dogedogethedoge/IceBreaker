@@ -619,6 +619,32 @@
 		}
 
 
+		function willFall(board, currClicked){
+			//Temp board
+			var new_mask = copy(board.mask);
+			var hits = flipAxes(currClicked);
+
+			//Update board for hits
+			for (var i = 0; i < hits.length; i++){
+				new_mask[hits[i][0]][hits[i][1]] = 0;
+			}
+			
+			var indices = combinations(new_mask);
+			var fallen = [];
+			
+			for (var i = 0; i < indices.length; i++){
+				var ix = indices[i][0];
+				var iy = indices[i][1];
+				if (new_mask[ix][iy] == 1){
+					fallen.push([iy, ix]);
+				}
+			}
+			
+			return (fallen);
+
+		}
+
+
 		function flipAxes(currClicked){
 			var hits = new Array(currClicked.length);
 			for (var i = 0; i < currClicked.length; i++){
