@@ -1012,7 +1012,8 @@
 			if (turnNumber % 2 === botTurn)
 			{
 				console.log("PLAYING BOT");
-				playBotTurn();
+				setTimeout(playBotTurn(), 2000);
+				//playBotTurn();
 				turnNumber++;
 				currClicked = [];						
 				
@@ -1043,9 +1044,9 @@
 			var validMove = [];
 			var foundMove = false;
 			
-			console.log("playBotTurn");
-			
+			console.log("playBotTurn");			
 			console.log(currMask);
+			
 			
 			
 			//this is y
@@ -1085,6 +1086,7 @@
 								console.log(newBoard);
 								ctx.drawImage(hitBlock, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 								//sleep(1000);
+								
 								paintGrid(newBoard.mask);
 								break;
 							}
