@@ -1151,14 +1151,8 @@
 			
 			if (turnNumber % 2 === botTurn)
 			{
-				console.log("PLAYING BOT");
-				//sleep(2000);
-				playBotTurn();
-				//setTimeout(playBotTurn(), 2000);
-				//playBotTurn();
-				turnNumber++;
-				currClicked = [];						
-				
+				console.log("PLAYING BOT");			
+
 				if (turnNumber % 2 === 0)
 				{
 					$(playerIdDisplay).html("Current player: " + playerOneName);
@@ -1166,7 +1160,11 @@
 				else
 				{
 					$(playerIdDisplay).html("Current player: " + playerTwoName);
-				}					
+				}	
+				
+				setTimeout(playBotTurn, 2000);				
+				turnNumber++;
+				currClicked = [];										
 			}
 		}
 		
@@ -1186,9 +1184,15 @@
 			var validMove = [];
 			var foundMove = false;
 			
-			console.log("playBotTurn");			
-			console.log(currMask);
-			
+				
+			if (turnNumber % 2 === 0)
+			{
+				$(playerIdDisplay).html("Current player: " + playerOneName);
+			}
+			else
+			{
+				$(playerIdDisplay).html("Current player: " + playerTwoName);
+			}	
 			
 			
 			//this is y
