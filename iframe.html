@@ -758,7 +758,7 @@
 
 		function inBear(i, j){
 			for (var m = 0; m < bearLocation.length; m++){
-				if ((bearLocation[m][1] == i) & bearLocation[m][1] == j){
+				if ((bearLocation[m][1] == i) & bearLocation[m][0] == j){
 					return(1)
 				}
 			}
@@ -782,8 +782,10 @@
 				for (var j = 0; j < new_mask.length; j++){
 					if (update_mask.mask[i][j] != new_mask[i][j]){
 						if ((update_mask.state == 1) & (inBear(i,j) == 0)){
+							console.log("HERE HERE HERE", (j,i))
 							fallen.push([j, i]);
 						} else if (update_mask.state == 0){
+							console.log("THERE THERE THERE", (j,i))
 							fallen.push([j, i]);
 						} 
 					}
