@@ -808,7 +808,7 @@
 			for (var i = 0; i < new_mask.length; i++){
 				for (var j = 0; j < new_mask.length; j++){
 					if (update_mask.mask[i][j] != new_mask[i][j]){
-						if ((update_mask.state == 0) & (inBear(i, j) == 1)){
+						if ((update_mask.state == 1) & (inBear(i, j) == 1)){
 							fallen.push([j, i]);
 						} else if (inBear(i, j) == 0){
 							fallen.push([j, i]);
