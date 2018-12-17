@@ -153,16 +153,47 @@
 			var currFallenLength = currFallen.length;
 						
 			//reset the fallen images back to ice block if there were any
+			var redrawBear = false;
+			
 			if (currFallenLength > 0)
 			{
 				for (var i = 0; i < currFallenLength; ++i)
 				{
 					var currFallenBlock = currFallen[i];
 					
-					ctx.drawImage(iceBlock, currFallenBlock[0] * CONST_BLOCK_SIZE, currFallenBlock[1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+					if (checkIsBearLocation(currFallenBlock[0], currFallenBlock[1]))
+					{
+						redrawBear = true;
+						//ctx.drawImage(bearImage, currFallenBlock[0] * CONST_BLOCK_SIZE, currFallenBlock[1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+					}
+					else
+					{
+						ctx.drawImage(iceBlock, currFallenBlock[0] * CONST_BLOCK_SIZE, currFallenBlock[1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+					}
 				}		
 
 				currFallen = [];				
+			}
+			
+			if (redrawBear)
+			{
+				var min_x = gridSize;
+				var min_y = gridSize;
+				
+				for (var i = 0; i < bearLength; ++i)
+				{
+					if (bearLocation[i][0] <  min_x)
+					{
+						min_x = bearLocation[i][0];
+					}
+					
+					if (bearLocation[i][1] < min_y)
+					{
+						min_y = bearLocation[i][1];
+					}
+				}
+				
+				ctx.drawImage(bearImage, min_x * CONST_BLOCK_SIZE, min_y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE * 2, CONST_BLOCK_SIZE * 2);
 			}
 									
 						
@@ -617,7 +648,7 @@
 				});
 			}
 		
-  /*
+  
         $(function () {
             $('#firstButton').popover({
                 container: "body",
@@ -630,11 +661,7 @@
 
             })
         });
-		*/
-		
-		//ondblclick???
-		
-		
+						
 		//resets game state
         function resetGame() {            
             var submitButton = document.getElementById("submit");
@@ -1524,7 +1551,7 @@
     <div class="form-group" id="RightPane" style="position: absolute; top:0; left: 70%; width:30%">
         <a id="firstButton" class="btn btn-default" rel="popover" data-placement="bottom"
            data-message="Message">Instructions</a>
-
+		   
         <h2>Parameters</h2>
 
 
