@@ -781,9 +781,9 @@
 			for (var i = 0; i < new_mask.length; i++){
 				for (var j = 0; j < new_mask.length; j++){
 					if (update_mask.mask[i][j] != new_mask[i][j]){
-						if (update_mask.state == 1){
+						if ((update_mask.state == 1) & (inBear(i,j) == 0)){
 							fallen.push([j, i]);
-						} else if ((update_mask.state == 0) & (inBear(i, j) == 0)){
+						} else if (update_mask.state == 0){
 							fallen.push([j, i]);
 						} 
 					}
@@ -1561,16 +1561,18 @@
             <b>Rules</b>            
 			<br>
             Dear Dr. Nepharious,
-			I see you have accepted my wager.  The building of my new semi-aquatic lair will commence as soon as we remove the offending ice.  I will have the polar bears placed on a 2x2 ice block of your choice (Player 1) after which we can commence in our game.  We will take turns breaking blocks of ice until the loser knocks the bears into the water.  Don't forget the Mounties will come for the player who knocks the bears into the water, so be careful.
+			I see you have accepted my wager.  The building of my new semi-aquatic lair will commence as soon as we remove the offending ice.  I will have the polar bear placed on a 2x2 ice block of your choice (Player 1) after which we can commence in our game.  We will take turns breaking blocks of ice until the loser knocks the bear into the water.  Don't forget the Mounties will come for the player who knocks the bear into the water, so be careful.
 			<br />
 			<br>
 			<br />
 			<em>
 			Rules <br> <br />
 			- Player 1 will choose a 2x2 set of blocks for the polar bears. <br> <br />
-			- Players will alternate turns choosing where to hit the blocks that do not contain bears each turn, the intersections may be hit as well. <br> <br />
+			- Players will alternate turns choosing where to hit the blocks the bear is not resting on each turn, the intersections may be hit as well. <br> <br />
 			- The game continues until a player knocks all four polar bears into the water.  They can hold each up until if only a few of them are knocked in. <br> <br />
 			- Ice blocks will only stay up if it is in either a complete row or complete column. <br> <br />
+			- Each player can click Confirm to finish their term, or double click their choice <br> <br />
+			- Players can also turn on a hint mode, to show which blocks will fall with their current selection. <br> <br />
 			</em>
 			Good Luck!        
         </div>
