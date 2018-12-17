@@ -180,9 +180,7 @@
 
 				currFallen = [];				
 			}
-			
-			console.log(redrawBear);
-			
+						
 			if (redrawBear)
 			{
 				var min_x = gridSize;
@@ -214,11 +212,6 @@
 			var currY;			
 			var containsBearLoc = false;
 			var boardState = board.mask;
-			
-			console.log("QQQQQQ");
-			console.log(boardState);
-			console.log("____________________");
-			
 			
 			if ((mouseX - lowerX) <= CONST_INTERSECTION_RADIUS && (mouseY - lowerY) <= CONST_INTERSECTION_RADIUS) //northwest
 			{
@@ -579,11 +572,7 @@
 				}					
 			}
 			else //only 1 block
-			{
-				console.log("PPPP");
-				console.log(x, y);
-				console.log(boardState[x][y]);
-			
+			{				
 				if (boardState[y][x] === 1)
 				{
 					currClicked.push([x, y]);
@@ -593,8 +582,6 @@
 					return;
 				}
 			}
-			
-			console.log(currClicked);
 			
 			currClickedLength = currClicked.length;
 			
@@ -606,9 +593,7 @@
 						
 			if (document.getElementById("willFallCheckbox").checked === true)
 			{
-				var fallen = willFall(board, currClicked);
-				console.log(fallen);
-				
+				var fallen = willFall(board, currClicked);			
 				var fallenLength = fallen.length;
 				
 				if (fallenLength > 0)
@@ -821,17 +806,15 @@
 			for (var i = 0; i < new_mask.length; i++){
 				for (var j = 0; j < new_mask.length; j++){
 					if (update_mask.mask[i][j] != new_mask[i][j]){
-						if ((update_mask.state == 1) & (inBear(i,j) == 0)){
-							console.log("HERE HERE HERE", (j,i))
+						if ((update_mask.state == 1) & (inBear(i,j) == 0)){							
 							fallen.push([j, i]);
 						} else if (update_mask.state == 0){
-							console.log("THERE THERE THERE", (j,i))
 							fallen.push([j, i]);
 						} 
 					}
 				}
 			}
-			console.log("Fallen", fallen);
+			
 			return (fallen);
 		}
 
@@ -871,8 +854,6 @@
 		   new_board = {"state":state,
 						"mask":new_mask
 					   }
-
-			console.log("new_board", new_board);
 
 		   return (new_board);
 		}		
@@ -1062,9 +1043,7 @@
 		{
 			var x = Math.floor(Math.random() * (rawGridSize - 1));
 			var y = Math.floor(Math.random() * (rawGridSize - 1));
-			
-			console.log("x and y:", x, y);
-			
+						
 			currClicked.push([x, y]);
 			currClicked.push([x + 1, y]);
 			currClicked.push([x, y + 1]);
@@ -1230,7 +1209,6 @@
 			
 			if (turnNumber % 2 === botTurn)
 			{
-				console.log("PLAYING BOT");	
 				isBotTurn = true;
 
 				if (turnNumber % 2 === 0)
@@ -1295,8 +1273,6 @@
 						{
 							//if there are no valid moves, then bot has won already
 							validMove = [[j, i]];
-							console.log(currMask[j][i]);
-							console.log("YYYYY", j, i);
 							
 							var newBoard = updateMask(board, validMove);
 							
@@ -1306,14 +1282,9 @@
 							}
 							else
 							{
-								foundMove = true;
-								console.log("WWWWWWW");
-								console.log(validMove);
+								foundMove = true;								
 								board = newBoard;
-								console.log(newBoard);
-								ctx.drawImage(hitBlock, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
-								//sleep(1000);
-								
+								ctx.drawImage(hitBlock, j * CONST_BLOCK_SIZE, i * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);								
 								paintGrid(newBoard.mask);
 								break;
 							}
@@ -1326,9 +1297,7 @@
 			
 			//bot loses
 			if (!foundMove)
-			{
-				console.log("BOT IS GOING TO LOSE");
-				console.log(validMove);			
+			{				
 				var newBoard = updateMask(board, validMove);
 				paintGrid(newBoard.mask);
 				//game over
@@ -1448,7 +1417,6 @@
 				
 				if (gameMode === CONST_AVP)
 				{
-					console.log("YOYO222");
 					randomBearLocation();
 				}							
 			}
@@ -1472,9 +1440,7 @@
 			{
 				if (currClicked.length > 0)
 				{
-					var fallen = willFall(board, currClicked);
-					console.log(fallen);
-					
+					var fallen = willFall(board, currClicked);					
 					var fallenLength = fallen.length;
 					
 					if (fallenLength > 0)
@@ -1511,7 +1477,6 @@
 		function playerModeChanged()
 		{
 			var selection = document.getElementById("playerMode").value;
-			console.log(selection);
 			
 			if (selection === CONST_PVP)
 			{
