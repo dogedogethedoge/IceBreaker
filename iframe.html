@@ -24,6 +24,9 @@
 	
 		var bearImage = new Image();		
 		bearImage.src = "pics/polar_bears.png";
+
+		var fallenBearImage = new Image();
+		fallenBearImage.src = "pics/fallen_polar_bears.png";
 		
 		var iceBlock = new Image();		
 		iceBlock.src = "pics/ice_block.png";
@@ -170,7 +173,6 @@
 					if (checkIsBearLocation(currFallenBlock[0], currFallenBlock[1]))
 					{
 						redrawBear = true;
-						//ctx.drawImage(bearImage, currFallenBlock[0] * CONST_BLOCK_SIZE, currFallenBlock[1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
 					}
 					else
 					{
@@ -1174,21 +1176,38 @@
 					//game over
 					stage = 2;
 					
-					for (i = 0; i < CONST_MAX_HIT_HIGHLIGHT; ++i)
+
+			
+					var min_x = gridSize;
+					var min_y = gridSize;
+					var bearLength = bearLocation.length;
+					
+					for (var i = 0; i < bearLength; ++i)
 					{
-						ctx.drawImage(goneIce, bearLocation[i][0] * CONST_BLOCK_SIZE, bearLocation[i][1] * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE, CONST_BLOCK_SIZE);
+						if (bearLocation[i][0] <  min_x)
+						{
+							min_x = bearLocation[i][0];
+						}
+						
+						if (bearLocation[i][1] < min_y)
+						{
+							min_y = bearLocation[i][1];
+						}
 					}
+					
+					ctx.drawImage(fallenBearImage, min_x * CONST_BLOCK_SIZE, min_y * CONST_BLOCK_SIZE, CONST_BLOCK_SIZE * 2, CONST_BLOCK_SIZE * 2);
+				
 					
 					$(playerIdDisplay).html("Game Over!");
 					
 					if (turnNumber % 2 === 0)
 					{
-						alert("Player 1 disturbed the bears and is going to jail, how could you? That means Player 2 wins!")
+						alert("Player 1 disturbed the bears, how could you? That means Player 2 wins!")
 						
 					}
 					else
 					{
-						alert("Player 2 disturbed the bears and is going to jail, how could you? That means Player 1 wins!")
+						alert("Player 2 disturbed the bears, how could you? That means Player 1 wins!")
 					}					
 					
 					var confirmButton = document.getElementById("confirm");
@@ -1317,12 +1336,12 @@
 				
 				if (turnNumber % 2 === 0)
 				{
-					alert("Player 1 disturbed the bears and is going to jail, how could you? That means Player 2 wins!")
+					alert("Player 1 disturbed the bears, how could you? That means Player 2 wins!")
 					
 				}
 				else
 				{
-					alert("Player 2 disturbed the bears and is going to jail, how could you? That means Player 1 wins!")
+					alert("Player 2 disturbed the bears, how could you? That means Player 1 wins!")
 				}					
 				
 				var confirmButton = document.getElementById("confirm");
